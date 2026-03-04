@@ -12,6 +12,7 @@ const Home = () => {
     const [players,setPlayers]=useState([])
     const [guess,setGuess]=useState("")
     const [messages,setMessages]=useState([])
+    const[isDrawer,setIsDrawer]=useState(false)
     const canvasRef=useRef(null)
 
   useEffect(() => {
@@ -45,6 +46,19 @@ const Home = () => {
         ctx.beginPath()
         ctx.moveTo(e.offsetX,e.offsetY)
     }
+
+    socket.on("round_start",(data)=>{
+        if(socket.id===data.drawer){
+            setIsDrawer(true)
+        }
+        else{
+            setIsDrawer(false)
+        }
+    })
+
+    socket.on("your_word",(word)=>{
+        alert('Your word is: '+word)
+    })
 
    
 
@@ -159,6 +173,7 @@ const Home = () => {
     <div style={{marginTop:"20px"}}>
 
     <input
+    disabled={isDrawer}
     placeholder="Enter guess..."
     value={guess}
     onChange={(e)=>setGuess(e.target.value)}
