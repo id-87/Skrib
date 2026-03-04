@@ -36,7 +36,7 @@ io.on("connection",(socket)=>{
             }
         }
 
-        rooms[room].player.push({
+        rooms[room].players.push({
             id:socket.id,
             name,
             score:0
