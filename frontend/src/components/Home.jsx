@@ -23,40 +23,55 @@ const Home = () => {
     })
 
       
-
     socket.on("player_list",(players)=>{
         setPlayers(players)
     })
 
-
     const canvas=canvasRef.current
     const ctx=canvas.getContext("2d")
 
-    
-
     let drawing=false
 
-    canvas.addEventListener("mousedown",(e)=>{
+    const handleMouseDown=(e)=>{
         drawing=true
-    })
+        ctx.beginPath()
+        ctx.moveTo(e.offsetX,e.offsetY)
+    }
 
-    canvas.addEventListener("mousemove",(e)=>{
-        if(!drawing){
-            return
-        }
-        const x=e.offsetX
-        const y=e.offsetY
+   
 
-        socket.emit("draw_move",{x,y,z})
-    })
+    const handleMouseMove = (e)=>{
 
-    canvas.addEventListener("mouseup",()=>{
+      if(!drawing) return
+
+      const x = e.offsetX
+      const y = e.offsetY
+
+      
+      ctx.lineTo(x,y)
+      ctx.stroke()
+
+      
+      socket.emit("draw_move",{x,y})
+
+    }
+
+    const handleMouseUp=()=>{
         drawing=false
-    })
+    }
+
+
+    canvas.addEventListener("mousedown",handleMouseDown)
+    canvas.addEventListener("mousemove",handleMouseMove)
+    canvas.addEventListener("mouseup",handleMouseUp)
+
+    
+    
+   
 
     socket.on("draw_move",(data)=>{
-        const canvas=canvasRef.current
-        const ctx=canvas.getContext("2d")
+        // const canvas=canvasRef.current
+        // const ctx=canvas.getContext("2d")
 
         ctx.lineTo(data.x,data.y)
         ctx.stroke()
@@ -64,6 +79,7 @@ const Home = () => {
 
     return () => {
       socket.off("player_list")
+      socket.off("draw_move")
     }
 
     
