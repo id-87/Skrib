@@ -10,6 +10,8 @@ const Home = () => {
     const [name,setName]=useState("")
     const [room,setRoom]=useState("room1")
     const [players,setPlayers]=useState([])
+    const [guess,setGuess]=useState("")
+    const [messages,setMessages]=useState([])
     const canvasRef=useRef(null)
 
   useEffect(() => {
@@ -74,6 +76,13 @@ const Home = () => {
     canvas.addEventListener("mousemove",handleMouseMove)
     canvas.addEventListener("mouseup",handleMouseUp)
 
+
+    socket.on("chat_message",(msg)=>{
+
+    setMessages(prev => [...prev,msg])
+
+    })
+
     
     
    
@@ -93,6 +102,12 @@ const Home = () => {
     
 
     }, [])
+
+    const sendGuess=()=>{
+        socket.emit("guess",{
+            name,room,guess
+        })
+    }
 
   const joinRoom=()=>{
     socket.emit("join_room",{
@@ -123,11 +138,40 @@ const Home = () => {
         </div>
         ))}
       </div>
+
+
       <canvas
       ref={canvasRef}
       width={600}
       height={400}
       style={{border:'2px solid black', marginTop:"20px"}}/>
+
+    <div style={{marginTop:"20px"}}>
+
+    <input
+    placeholder="Enter guess..."
+    value={guess}
+    onChange={(e)=>setGuess(e.target.value)}
+    />
+
+    <button onClick={sendGuess}>
+    Guess
+    </button>
+
+    </div>
+
+    <div style={{marginTop:"20px"}}>
+
+    <h3>Chat</h3>
+
+    {messages.map((msg,i)=>(
+    <div key={i}>
+    {msg}
+    </div>
+    ))}
+
+    </div>
+
     </div>
   )
 }
