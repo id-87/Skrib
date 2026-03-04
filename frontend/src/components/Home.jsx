@@ -32,6 +32,8 @@ const Home = () => {
     const canvas=canvasRef.current
     const ctx=canvas.getContext("2d")
 
+    
+
     let drawing=false
 
     canvas.addEventListener("mousedown",(e)=>{
@@ -50,6 +52,14 @@ const Home = () => {
 
     canvas.addEventListener("mouseup",()=>{
         drawing=false
+    })
+
+    socket.on("draw_move",(data)=>{
+        const canvas=canvasRef.current
+        const ctx=canvas.getContext("2d")
+
+        ctx.lineTo(data.x,data.y)
+        ctx.stroke()
     })
 
     return () => {
