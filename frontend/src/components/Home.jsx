@@ -76,11 +76,14 @@ const Home = () => {
     canvas.addEventListener("mousemove",handleMouseMove)
     canvas.addEventListener("mouseup",handleMouseUp)
 
+
+    socket.off('guess_result')
+
     socket.on("guess_result",(data)=>{
         setMessages(prev=>[...prev,`${data.player} guessed the word correctly`])
     })
 
-
+    socket.off("chat_message")
     socket.on("chat_message",(msg)=>{
 
     setMessages(prev => [...prev,msg])
@@ -101,6 +104,8 @@ const Home = () => {
     return () => {
       socket.off("player_list")
       socket.off("draw_move")
+      socket.off("chat_message")
+    socket.off("guess_result")
     }
 
     
