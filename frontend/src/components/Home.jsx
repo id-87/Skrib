@@ -28,6 +28,30 @@ const Home = () => {
         setPlayers(players)
     })
 
+
+    const canvas=canvasRef.current
+    const ctx=canvas.getContext("2d")
+
+    let drawing=false
+
+    canvas.addEventListener("mousedown",(e)=>{
+        drawing=true
+    })
+
+    canvas.addEventListener("mousemove",(e)=>{
+        if(!drawing){
+            return
+        }
+        const x=e.offsetX
+        const y=e.offsetY
+
+        socket.emit("draw_move",{x,y,z})
+    })
+
+    canvas.addEventListener("mouseup",()=>{
+        drawing=false
+    })
+
     return () => {
       socket.off("player_list")
     }
