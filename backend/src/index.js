@@ -17,11 +17,33 @@ const io=new Server(server,{
 
 })
 
+let rooms={}
+
+
+
 io.on("connection",(socket)=>{
     console.log("User connected:",socket.id)
 
     socket.on("disconnect",()=>{
         console.log("User disconnected:",socket.id)
+    })
+
+    socket.on('join_room',({name,room})=>{
+        socket.join(room)
+        if(!rooms[room]){
+            rooms[room]={
+                players:[]
+            }
+        }
+
+        rooms[room].player.push({
+            id:socket.id,
+            name,
+            score:0
+        })
+
+        console.log(name,"joined",room)
+        io.to(room).emit('player_list',rooms[room].players)
     })
 })
 
