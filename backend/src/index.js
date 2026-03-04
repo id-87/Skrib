@@ -17,7 +17,7 @@ const io=new Server(server,{
 
 })
 
-io.on("connection",()=>{
+io.on("connection",(socket)=>{
     console.log("User connected:",socket.id)
 
     socket.on("disconnect",()=>{
