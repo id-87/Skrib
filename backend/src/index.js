@@ -46,8 +46,8 @@ io.on("connection",(socket)=>{
         io.to(room).emit('player_list',rooms[room].players)
     })
 
-    socket.on("draw-move",(data)=>{
-        socket.broadcast.emit("draw_move",data)
+    socket.on("draw_move",(data)=>{
+        socket.to(data.room).emit("draw_move",data)
     })
 })
 
