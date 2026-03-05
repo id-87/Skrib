@@ -20,10 +20,27 @@ const io=new Server(server,{
 let rooms={}
 
 function startRound(room){
+    rooms[room].round++
     const players=rooms[room].players
     if(players.length===0){
         return
     }
+
+    if(rooms[room].round > rooms[room].maxRounds){
+
+    const winner = rooms[room].players.sort((a,b)=>b.score-a.score)[0]
+
+    io.to(room).emit("game_over",{
+    winner:winner.name,
+    score:winner.score
+    })
+
+    return
+
+    }
+
+
+
     const drawer=players[Math.floor(Math.random()*players.length)]
     rooms[room].drawer = drawer.id
 
@@ -60,11 +77,14 @@ io.on("connection",(socket)=>{
 
 })
 
-    socket.on("start_game",(room)=>{
+    socket.on("start_game",({room,maxRounds})=>{
 
         if(socket.id !== rooms[room].host){
         return
         }
+
+        rooms[room].maxRounds = maxRounds
+        rooms[room].round = 0
 
         startRound(room)
 
@@ -106,7 +126,9 @@ io.on("connection",(socket)=>{
             players:[],
             host:socket.id,
             currentWord:null,
-            drawer:null
+            drawer:null,
+            round:0,
+            maxRounds:7
             }
         }
         
