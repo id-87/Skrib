@@ -13,6 +13,8 @@ const Home = () => {
     const [guess,setGuess]=useState("")
     const [messages,setMessages]=useState([])
     const[isDrawer,setIsDrawer]=useState(false)
+    const [isHost,setIsHost] = useState(false)
+    const [wordChoices,setWordChoices] = useState([])
     const canvasRef=useRef(null)
 
   useEffect(() => {
@@ -28,6 +30,16 @@ const Home = () => {
       
     socket.on("player_list",(players)=>{
         setPlayers(players)
+        if(players[0]?.id===socket.id){
+            setIsHost(true)
+        }
+        else{
+            setIsHost(false)
+        }
+        
+    })
+    socket.on("word_options",(options)=>{
+    setWordChoices(options)
     })
 
     const canvas=canvasRef.current
@@ -48,6 +60,9 @@ const Home = () => {
     }
 
     socket.on("round_start",(data)=>{
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext("2d")
+        ctx.clearRect(0,0,canvas.width,canvas.height)
         if(socket.id===data.drawer){
             setIsDrawer(true)
         }
@@ -56,15 +71,12 @@ const Home = () => {
         }
     })
 
-    socket.on("your_word",(word)=>{
-        alert('Your word is: '+word)
-    })
-
+    
    
 
     const handleMouseMove = (e)=>{
 
-      if(!drawing) return
+      if(!drawing||!isDrawer) return
 
       const x = e.offsetX
       const y = e.offsetY
@@ -132,6 +144,13 @@ const Home = () => {
             name,room,guess
         })
     }
+    const chooseWord=(word)=>{
+
+    socket.emit("select_word",{room,word})
+
+    setWordChoices([])
+
+    }
 
   const joinRoom=()=>{
     socket.emit("join_room",{
@@ -154,6 +173,12 @@ const Home = () => {
         Join Room
         </button>
 
+        {isHost && (
+            <button onClick={()=>socket.emit("start_game",room)}>
+            Start Game
+            </button>
+            )}
+
         <h3>Players in Lobby</h3>
 
         {players.map(p => (
@@ -163,7 +188,18 @@ const Home = () => {
         ))}
       </div>
 
+    {wordChoices.length > 0 && (
+    <div style={{marginTop:"10px"}}>
+    <h3>Choose a word</h3>
 
+    {wordChoices.map(w=>(
+    <button key={w} onClick={()=>chooseWord(w)}>
+    {w}
+    </button>
+    ))}
+
+    </div>
+    )}
       <canvas
       ref={canvasRef}
       width={600}
