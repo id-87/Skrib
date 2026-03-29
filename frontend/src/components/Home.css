@@ -182,3 +182,15 @@ canvas {
 .container > div:not(:last-child) {
   grid-column: 1;
 }
+
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .container > div:last-child {
+    grid-column: 1;
+    grid-row: auto;
+    height: 250px;
+  }
+}
