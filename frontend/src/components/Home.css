@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f1f5f9;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.container > div:first-child {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+h3 {
+  color: #38bdf8;
+  margin-top: 10px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+input[type="number"] {
+  width: 100px;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #38bdf8;
+  color: #020617;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #0ea5e9;
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+}
+
+canvas {
+  background: white;
+  border-radius: 8px;
+  border: 3px solid #38bdf8;
+  align-self: center;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.players-list div {
+  background: #020617;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.word-choice {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.word-choice button {
+  background: #22c55e;
+  color: white;
+}
+
+.word-choice button:hover {
+  background: #16a34a;
+}
+
+.chat-box {
+  background: #020617;
+  border-radius: 10px;
+  padding: 15px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.chat-box div {
+  padding: 6px 0;
+  border-bottom: 1px solid #334155;
+  font-size: 14px;
+}
+
+.chat-box div:last-child {
+  border-bottom: none;
+}
+
+.guess-box {
+  display: flex;
+  gap: 10px;
+}
+
+.guess-box input {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  canvas {
+    width: 100%;
+    height: auto;
+  }
+
+  .container {
+    padding: 20px 15px;
+  }
+
+  button {
+    width: 100%;
+  }
+}

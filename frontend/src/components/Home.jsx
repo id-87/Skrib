@@ -1,6 +1,7 @@
 
 import React,{useEffect,useState,useRef} from "react"
 import {socket} from "../socket"
+import './Home.css'
 
 const Home=()=>{
 
